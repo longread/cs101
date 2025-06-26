@@ -1,50 +1,38 @@
-import java.util.*;
-public class ZigzagIterator {
-    int i;
-    int j;
-    int turn;
-    List<Integer> v1;
-    List<Integer> v2;
-    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
-        this.i = 0;
-        this.j = 0;
-        this.turn = 0;
-        this.v1 = v1;
-        this.v2 = v2;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class ZigzagIterator implements Iterator<Integer> {
+
+    private final Queue<Iterator<Integer>> iterators;
+
+    public ZigzagIterator(List<List<Integer>> lists) {
+        this.iterators = new LinkedList<>();
+        if (lists == null) {
+            return;
+        }
+        for (List<Integer> list : lists) {
+            if (list != null && !list.isEmpty()) {
+                this.iterators.add(list.iterator());
+            }
+        }
     }
 
-    public int next() {
-        int value;
-        if (i<v1.size() && j<v2.size()){
-            if (turn==0){
-                value = v1.get(i);
-                i++;
-            }else{
-                value = v2.get(j);
-                j++;
-            }
-            turn = (turn + 1)%2;
-        }else if (i<v1.size()){
-            value = v1.get(i);
-            i++;
-        }else {
-            value = v2.get(j);
-            j++;
+    @Override
+    public Integer next() {
+        Iterator<Integer> currentIterator = iterators.poll();
+        Integer value = currentIterator.next();
+
+        if (currentIterator.hasNext()) {
+            iterators.add(currentIterator);
         }
+
         return value;
     }
 
+    @Override
     public boolean hasNext() {
-        return i<v1.size() || j<v2.size();
-    }
-
-    public static void main(String[] args) {
-        ZigzagIterator zigzagIterator = new ZigzagIterator(
-                Arrays.asList(1,2,3),
-                Arrays.asList(4)
-        );
-        while (zigzagIterator.hasNext()){
-            System.out.println(zigzagIterator.next());
-        }
+        return !iterators.isEmpty();
     }
 }
