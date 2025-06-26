@@ -6,9 +6,9 @@ public class ZigzagIterator {
     List<Integer> v1;
     List<Integer> v2;
     public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
-        int i = 0;
-        int j = 0;
-        int turn = 0;
+        this.i = 0;
+        this.j = 0;
+        this.turn = 0;
         this.v1 = v1;
         this.v2 = v2;
     }
